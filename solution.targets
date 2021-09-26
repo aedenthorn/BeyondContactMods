@@ -132,14 +132,14 @@
 
   <!-- Add other references -->
   <ItemGroup Label="_Other">
+    <Reference Include="RootMotion">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(ManagedDataPath)\RootMotion.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Il2Cppmscorlib">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(ManagedDataPath)\Il2Cppmscorlib.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Assembly-CSharp-firstpass">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataPath)\Assembly-CSharp-firstpass.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
@@ -239,6 +239,11 @@
     <Reference Include="UnityEngine.ImageConversionModule">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(UnityPath)\UnityEngine.ImageConversionModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Postprocessing.Runtime">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(UnityPath)\Unity.Postprocessing.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
    

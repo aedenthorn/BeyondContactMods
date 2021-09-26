@@ -2,27 +2,14 @@
 using BepInEx.Configuration;
 using BepInEx.IL2CPP;
 using Beyond;
-using Beyond.Combat.Activities;
 using Beyond.DebugUtility;
-using Beyond.EntityData;
 using Beyond.Equipment;
-using Beyond.Input;
-using Beyond.Networking;
-using Beyond.Respawning;
-using Beyond.ServerSystems;
-using Beyond.UI;
 using Beyond.World;
 using HarmonyLib;
-using Il2CppSystem.Collections;
 using Il2CppSystem.Collections.Generic;
-using Playcorp;
 using System;
 using System.Reflection;
-using System.Threading.Tasks;
-using Unity.Entities;
 using UnityEngine;
-using static Beyond.Combat.Activities.MasterCombatActivitySystem;
-using static Beyond.Input.BeyondActions;
 
 namespace CheatMode
 {
@@ -42,14 +29,16 @@ namespace CheatMode
         public static ConfigEntry<int> durabilityLossTickMult;
         public static ConfigEntry<int> foodLossTickMult;
         public static ConfigEntry<int> oxygenLossTickMult;
-        public static ConfigEntry<int> timeTickMult;
+        public static ConfigEntry<int> timeTickDayMult;
+        public static ConfigEntry<int> timeTickNightMult;
 
 
         public static int foodTimeDelta;
         public static int oxygenTimeDelta;
         public static int durabilityTimeDelta1;
         public static int durabilityTimeDelta2;
-        public static int timeTimeDelta;
+        public static int timeTickDelta;
+        public static TimeOfDay lastTickTimeOfDay;
 
         public static bool changed = false;
 
@@ -71,9 +60,10 @@ namespace CheatMode
             durabilityLossTickMult = Config.Bind<int>("Options", "DurabilityLossMult", 0, "Multiply time it takes for one tick of durability loss by this amount while cheat mode is on (set to 0 to disable durability loss)");
             foodLossTickMult = Config.Bind<int>("Options", "FoodLossMult", 0, "Multiply time it takes for one tick of food loss by this amount while cheat mode is on (set to 0 to disable food loss)");
             oxygenLossTickMult = Config.Bind<int>("Options", "OxygenLossMult", 0, "Multiply time it takes for one tick of oxygen loss by this amount while cheat mode is on (set to 0 to disable oxygen loss)");
-            timeTickMult = Config.Bind<int>("Options", "TimeRateMult", 0, "Multiply time it takes for one time of day tick by this amount while cheat mode is on (set to 0 to disable time of day change)");
+            timeTickDayMult = Config.Bind<int>("Options", "TimeTickDayMult", 0, "During the day, multiply time it takes for one time tick by this amount while cheat mode is on (set to 0 to disable time of day change)");
+            timeTickNightMult = Config.Bind<int>("Options", "TimeTickNightMult", 0, "During the night, multiply time it takes for one time tick by this amount while cheat mode is on (set to 0 to disable time of day change)");
 
-            infiniteHealth = Config.Bind<bool>("Options", "InfiniteHealth", true, "Infinite health while cheat mode is on");
+            //infiniteHealth = Config.Bind<bool>("Options", "InfiniteHealth", true, "Infinite health while cheat mode is on");
             noTemperatureDamage = Config.Bind<bool>("Options", "NoTemperatureDamage", true, "No temperature damage while cheat mode is on");
 
             hotKey = Config.Bind<string>("Options", "HotKey", "home", "Hotkey to toggle cheat mode.");
@@ -274,13 +264,20 @@ namespace CheatMode
                 if (!modEnabled.Value || !cheatModeOn.Value)
                     return true;
 
-                if (timeTickMult.Value <= 0)
+                if(NetworkedWorldObject.TimeOfDay != lastTickTimeOfDay)
+                {
+                    timeTickDelta = 0;
+                }
+
+                var mult = NetworkedWorldObject.TimeOfDay == TimeOfDay.Night ? timeTickNightMult.Value : timeTickDayMult.Value;
+
+                if (mult <= 0)
                     return false;
 
-                timeTimeDelta++;
-                if (timeTimeDelta >= timeTickMult.Value)
+                timeTickDelta++;
+                if (timeTickDelta >= mult)
                 {
-                    timeTimeDelta = 0;
+                    timeTickDelta = 0;
                     return true;
                 }
                 return false;
