@@ -48,7 +48,6 @@ namespace CheatMode
             if (isDebug.Value)
                 Debug.Log((pref ? typeof(BepInExPlugin).Namespace + " " : "") + str);
         }
-        public static HashSet<ActorType> immunities = new HashSet<ActorType>();
         public override void Load()
         {
             context = this;
@@ -70,12 +69,7 @@ namespace CheatMode
 
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), null);
 
-            foreach(ActorType a in Enum.GetValues(typeof(ActorType)))
-            {
-                immunities.Add(a);
-            }
         }
-
 
         [HarmonyPatch(typeof(WorldManagerState), "Update")]
         static class WorldManagerState_OnUpdate_Patch
@@ -90,110 +84,7 @@ namespace CheatMode
                     cheatModeOn.Value = !cheatModeOn.Value;
                     Dbgl($"Cheat mode: {cheatModeOn.Value}");
                 }
-            }
-        }
 
-        //[HarmonyPatch(typeof(HealthChangeSystem), nameof(HealthChangeSystem.OnUpdate))]
-        static class HealthChangeSystem_OnUpdate_Patch
-        {
-            static void Prefix(ref Dictionary<RoseActor, float> __state)
-            {
-                if (!modEnabled.Value || !cheatModeOn.Value || !infiniteHealth.Value)
-                    return;
-
-                if (cheatModeOn.Value && infiniteHealth.Value)
-                {
-                    __state = new Dictionary<RoseActor, float>();
-                    foreach (var ra in UnityEngine.Object.FindObjectsOfType<RoseActor>())
-                    {
-                        __state.Add(ra, ra.GetComponent<ComponentStats>().Data.Health);
-                        continue;
-                        StatsData sd = ra.GetComponent<ComponentStats>().Data;
-                        if (sd.Health == sd.MaxHealth)
-                            continue;
-                        sd.Health = sd.MaxHealth;
-                        ra.GetComponent<ComponentStats>().Data = sd;
-                    }
-                }
-            }
-            static void Postfix(ref Dictionary<RoseActor, float> __state)
-            {
-                if (__state == null)
-                    return;
-
-                foreach (var kvp in __state)
-                {
-                    float diff = kvp.key.GetComponent<ComponentStats>().Data.Health - kvp.value;
-                    if (diff > 0.001)
-                    {
-                        Dbgl($"Giving player {diff} health");
-                        DebugManager.Inst.GivePlayerHealth(kvp.key.Entity, (int)diff);
-                    }
-                }
-            }
-        }
-        //[HarmonyPatch(typeof(HealthEventListenerSystem), nameof(HealthEventListenerSystem.OnChange))]
-        static class HealthEventListenerSystem_OnChange_Patch
-        {
-            static void Postfix(ref Health data, ComponentStats target)
-            {
-                if (!modEnabled.Value || !cheatModeOn.Value || !infiniteHealth.Value || !target.GetComponent<RoseActor>())
-                    return;
-
-
-
-                StatsData sd = target.Data;
-                Dbgl($"Health update {sd.MaxHealth} to {data.CurrentValue}");
-                float diff = sd.MaxHealth - data.CurrentValue;
-                if (diff >= 1)
-                    DevConsole.Console.ExecuteCommand("/health", "" + Mathf.RoundToInt(sd.MaxHealth));
-            }
-        }
-        
-        //[HarmonyPatch(typeof(EffectStatsHealthBar), nameof(EffectStatsHealthBar.OnHealthChange))]
-        static class EffectStatsHealthBar_OnHealthChange_Patch
-        {
-            static bool Prefix(EffectStatsHealthBar __instance)
-            {
-                if (!modEnabled.Value || !cheatModeOn.Value || !infiniteHealth.Value || !__instance.GetComponent<RoseActor>())
-                    return true;
-
-                Dbgl($"Health bar update {__instance._healthTarget}/{__instance._healthValue}");
-                __instance._healthTarget = __instance._healthValue;
-                return false;
-            }
-        }
-                
-        //[HarmonyPatch(typeof(ComponentStats), nameof(ComponentStats.ReceiveStatsModification))]
-        static class ComponentStats_ReceiveStatsModification_Patch
-        {
-            static void Prefix(ComponentStats __instance, ref DataStatsModify statsModify)
-            {
-                if (!modEnabled.Value || !cheatModeOn.Value || !infiniteHealth.Value || !__instance.GetComponent<RoseActor>())
-                    return;
-
-                Dbgl($"ComponentStats_ReceiveStatsModification_Patch health change {statsModify.HealthDelta}");
-                if(statsModify.HealthDelta < 0)
-                    statsModify.HealthDelta = 0;
-            }
-        }
-
-        //[HarmonyPatch(typeof(ComponentStats), nameof(ComponentStats.OnHealthUpdate))]
-        static class ComponentStats_OnHealthUpdate_Patch
-        {
-            static void Postfix(ComponentStats __instance, ref Health data)
-            {
-                if (!modEnabled.Value || !cheatModeOn.Value || !infiniteHealth.Value || !__instance.GetComponent<RoseActor>())
-                    return;
-
-
-                StatsData sd = __instance.Data;
-                Dbgl($"ComponentStats_OnHealthUpdate {sd.MaxHealth} to {data.CurrentValue}");
-                float diff = sd.MaxHealth - data.CurrentValue;
-                if (diff >= 1)
-                {
-                    DevConsole.Console.ExecuteCommand("/health", "" + Mathf.RoundToInt(sd.MaxHealth));
-                }
             }
         }
         

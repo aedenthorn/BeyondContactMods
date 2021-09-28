@@ -56,13 +56,13 @@ namespace DevConsoleMod
                 {
                     pressedKey = true;
                     PlayerManager.Inst.LocalPlayer.PlayerActor._moveSpeed *= sprintSpeedMult.Value;
-                    Dbgl($"starting sprint {PlayerManager.Inst.LocalPlayer.PlayerActor._moveSpeed}x");
+                    //Dbgl($"starting sprint {PlayerManager.Inst.LocalPlayer.PlayerActor._moveSpeed}x");
                 }
                 else if (pressedKey && AedenthornUtils.CheckKeyUp(hotKey.Value))
                 {
                     pressedKey = false;
                     PlayerManager.Inst.LocalPlayer.PlayerActor._moveSpeed /= sprintSpeedMult.Value;
-                    Dbgl($"Ending sprint {PlayerManager.Inst.LocalPlayer.PlayerActor._moveSpeed}x");
+                    //Dbgl($"Ending sprint {PlayerManager.Inst.LocalPlayer.PlayerActor._moveSpeed}x");
                 }
             }
         }

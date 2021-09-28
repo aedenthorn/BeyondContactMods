@@ -2,9 +2,7 @@
 using BepInEx.Configuration;
 using BepInEx.IL2CPP;
 using Beyond.Cameras;
-using Beyond.Networking;
 using HarmonyLib;
-using RootMotion;
 using System.Reflection;
 using UnityEngine;
 
@@ -54,7 +52,7 @@ namespace FreeCamera
             hotKey = Config.Bind<string>("Options", "HotKey", "mouse 2", "Hotkey to toggle dev console.");
             resetHotKey = Config.Bind<string>("Options", "ResetHotKey", "end", "Hotkey to reset camera x and z rotation.");
             modKeyX = Config.Bind<string>("Options", "ModKeyX", "left alt", "Modifier key to rotate or move on X axis.");
-            modKeyY = Config.Bind<string>("Options", "ModKeyY", "left shift", "Modifier key to move on Y axis.");
+            modKeyY = Config.Bind<string>("Options", "ModKeyY", "right alt", "Modifier key to move on Y axis.");
             modKeyZ = Config.Bind<string>("Options", "ModKeyZ", "left ctrl", "Modifier key to rotate or move on Z axis.");
 
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), null);
