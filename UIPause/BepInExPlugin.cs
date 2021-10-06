@@ -2,10 +2,8 @@
 using BepInEx.Configuration;
 using BepInEx.IL2CPP;
 using Beyond.UI;
-using Beyond.World;
 using DevConsole;
 using HarmonyLib;
-using Il2CppSystem.Collections;
 using System.Reflection;
 using UnityEngine;
 
@@ -42,7 +40,7 @@ namespace UIPause
             {
                 if (!modEnabled.Value || Event.current.type != EventType.Repaint || (!GUIManager.Inst.Panels.ResearchCraftingPanel.IsResearchAndDevOpen()))
                     return;
-                Time.timeScale = 0;
+                Time.timeScale = 0.009f;
             }
         }
     }

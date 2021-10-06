@@ -2,8 +2,10 @@
 using BepInEx.Configuration;
 using BepInEx.IL2CPP;
 using Beyond;
+using Beyond.Collectable;
 using Beyond.DebugUtility;
 using Beyond.Equipment;
+using Beyond.Power;
 using Beyond.World;
 using HarmonyLib;
 using Il2CppSystem.Collections.Generic;
@@ -31,12 +33,16 @@ namespace CheatMode
         public static ConfigEntry<int> oxygenLossTickMult;
         public static ConfigEntry<int> timeTickDayMult;
         public static ConfigEntry<int> timeTickNightMult;
+        //public static ConfigEntry<int> spoilageTickMult;
 
 
         public static int foodTimeDelta;
         public static int oxygenTimeDelta;
         public static int durabilityTimeDelta1;
         public static int durabilityTimeDelta2;
+        public static int groundSpoilageTimeDelta;
+        public static int inventorySpoilageTimeDelta;
+        public static int poweredInventorySpoilageTimeDelta;
         public static int timeTickDelta;
         public static TimeOfDay lastTickTimeOfDay;
 
@@ -61,6 +67,7 @@ namespace CheatMode
             oxygenLossTickMult = Config.Bind<int>("Options", "OxygenLossMult", 0, "Multiply time it takes for one tick of oxygen loss by this amount while cheat mode is on (set to 0 to disable oxygen loss)");
             timeTickDayMult = Config.Bind<int>("Options", "TimeTickDayMult", 0, "During the day, multiply time it takes for one time tick by this amount while cheat mode is on (set to 0 to disable time of day change)");
             timeTickNightMult = Config.Bind<int>("Options", "TimeTickNightMult", 0, "During the night, multiply time it takes for one time tick by this amount while cheat mode is on (set to 0 to disable time of day change)");
+            //spoilageTickMult = Config.Bind<int>("Options", "SpoilageTickMult", 0, "Multiply time it takes for one tick of spoilage by this amount while cheat mode is on (set to 0 to disable spoilage)");
 
             //infiniteHealth = Config.Bind<bool>("Options", "InfiniteHealth", true, "Infinite health while cheat mode is on");
             noTemperatureDamage = Config.Bind<bool>("Options", "NoTemperatureDamage", true, "No temperature damage while cheat mode is on");
@@ -83,6 +90,12 @@ namespace CheatMode
                 {
                     cheatModeOn.Value = !cheatModeOn.Value;
                     Dbgl($"Cheat mode: {cheatModeOn.Value}");
+
+                    if (cheatModeOn.Value)
+                    {
+                        context.Config.Reload();
+                        Dbgl($"time tick {timeTickDayMult.Value}");
+                    }
                 }
 
             }
@@ -214,5 +227,67 @@ namespace CheatMode
                 return false;
             }
         }
+        /*
+        [HarmonyPatch(typeof(OnGroundSpoilageSystem), nameof(OnGroundSpoilageSystem.OnUpdate))]
+        static class OnGroundSpoilageSystem_OnUpdate_Patch
+        {
+            static bool Prefix()
+            {
+                if (!modEnabled.Value || !cheatModeOn.Value)
+                    return true;
+
+                if (spoilageTickMult.Value <= 0)
+                    return false;
+
+                groundSpoilageTimeDelta++;
+                if (groundSpoilageTimeDelta >= spoilageTickMult.Value)
+                {
+                    groundSpoilageTimeDelta = 0;
+                    return true;
+                }
+                return false;
+            }
+        }
+        [HarmonyPatch(typeof(InInventorySpoilageSystem), nameof(InInventorySpoilageSystem.OnUpdate))]
+        static class InInventorySpoilageSystem_OnUpdate_Patch
+        {
+            static bool Prefix()
+            {
+                if (!modEnabled.Value || !cheatModeOn.Value)
+                    return true;
+
+                if (spoilageTickMult.Value <= 0)
+                    return false;
+
+                inventorySpoilageTimeDelta++;
+                if (inventorySpoilageTimeDelta >= spoilageTickMult.Value)
+                {
+                    inventorySpoilageTimeDelta = 0;
+                    return true;
+                }
+                return false;
+            }
+        }
+        [HarmonyPatch(typeof(PoweredInventorySpoilageSystem), nameof(PoweredInventorySpoilageSystem.OnUpdate))]
+        static class PoweredInventorySpoilageSystem_OnUpdate_Patch
+        {
+            static bool Prefix()
+            {
+                if (!modEnabled.Value || !cheatModeOn.Value)
+                    return true;
+
+                if (spoilageTickMult.Value <= 0)
+                    return false;
+
+                poweredInventorySpoilageTimeDelta++;
+                if (poweredInventorySpoilageTimeDelta >= spoilageTickMult.Value)
+                {
+                    poweredInventorySpoilageTimeDelta = 0;
+                    return true;
+                }
+                return false;
+            }
+        }
+        */
     }
 }

@@ -30,14 +30,14 @@
   <!-- Manual overrides -->
   <PropertyGroup>
     <BepInExPath>$(GamePath)\BepInEx</BepInExPath>
-    <ManagedDataPath>$(GamePath)\She Will Punish Them_Data\Managed</ManagedDataPath>
+    <ManagedDataPath>$(GamePath)\BepInEx\unhollowed</ManagedDataPath>
     <UnityPath>$(ManagedDataPath)</UnityPath>
   </PropertyGroup>
 
   <!-- Set start action -->
   <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
     <StartAction>Program</StartAction>
-    <StartProgram>$(GamePath)\Sun Haven.exe</StartProgram>
+    <StartProgram>$(GamePath)\Beyond.exe</StartProgram>
     <StartArguments>-console</StartArguments>
     <StartWorkingDirectory>$(GamePath)</StartWorkingDirectory>
   </PropertyGroup>
@@ -46,12 +46,22 @@
   <ItemGroup Label="BepInEx">
     <Reference Include="0Harmony20">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(BepInExPath)\core\0Harmony20.dll</HintPath>
+      <HintPath>$(BepInExPath)\core\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="BepInEx">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(BepInExPath)\core\BepInEx.dll</HintPath>
+      <HintPath>$(BepInExPath)\core\BepInEx.IL2CPP.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnhollowerBaseLib">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(BepInExPath)\core\UnhollowerBaseLib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Il2Cppmscorlib">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(ManagedDataPath)\Il2Cppmscorlib.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
@@ -70,25 +80,6 @@
     </Reference>
   </ItemGroup>
 
-  <!-- Add Third-Parth references -->
-  <ItemGroup Label="3rd">
-    <Reference Include="umod">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataPath)\UMod.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="umod-shared">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataPath)\UMod-Shared.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Newtonsoft">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(ManagedDataPath)\Newtonsoft.Json.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-  </ItemGroup>
-  
   <!-- Add Unity references -->
   <ItemGroup Label="Unity">
     <Reference Include="UnityEngine">

@@ -88,6 +88,11 @@
       <HintPath>$(ManagedDataPath)\BeyondScience.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Beyond.Localization">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(ManagedDataPath)\Beyond.Localization.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="BeyondScience.Enums">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(ManagedDataPath)\BeyondScience.Enums.dll</HintPath>
@@ -126,6 +131,11 @@
     <Reference Include="Beyond.EntitySerialization">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(ManagedDataPath)\Beyond.EntitySerialization.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Beyond.Environment">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(ManagedDataPath)\Beyond.Environment.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
