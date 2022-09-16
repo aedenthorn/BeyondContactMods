@@ -133,6 +133,11 @@
       <HintPath>$(ManagedDataPath)\Beyond.EntitySerialization.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Beyond.Items">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(ManagedDataPath)\Beyond.Items.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Beyond.Environment">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(ManagedDataPath)\Beyond.Environment.dll</HintPath>

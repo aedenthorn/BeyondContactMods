@@ -5,13 +5,17 @@ using Beyond;
 using Beyond.Collectable;
 using Beyond.DebugUtility;
 using Beyond.Equipment;
+using Beyond.InventoryBuffers;
 using Beyond.Power;
+using Beyond.UI;
 using Beyond.World;
 using HarmonyLib;
 using Il2CppSystem.Collections.Generic;
 using System;
 using System.Reflection;
+using Unity.Entities;
 using UnityEngine;
+using static Beyond.InventoryBuffers.InventorySystem;
 
 namespace CheatMode
 {
@@ -289,5 +293,6 @@ namespace CheatMode
             }
         }
         */
+
     }
 }

@@ -62,7 +62,7 @@ namespace FreeCamera
         [HarmonyPatch(typeof(InGameCamera), nameof(InGameCamera.ZoomCamera))]
         static class InGameCamera_ZoomCamera_Patch
         {
-            static bool Prefix(InGameCamera __instance, float zoomSpeed, ref float scrollSensitivity)
+            static bool Prefix(float zoomSpeed, ref float scrollSensitivity)
             {
                 if (!modEnabled.Value)
                     return true;

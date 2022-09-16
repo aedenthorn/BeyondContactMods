@@ -30,24 +30,10 @@ namespace UIPause
             modEnabled = Config.Bind("General", "Enabled", true, "Enable this mod");
             isDebug = Config.Bind<bool>("General", "IsDebug", true, "Enable debug logs");
             disableRifts = Config.Bind<bool>("Options", "DisableRifts", true, "Disable rifts entirely");
-            doomsdayRiftCountMult = Config.Bind<float>("Options", "DoomsdayRiftCountMult", 1f, "Multiply number of rifts required for doomsday by this amount.");
+            //doomsdayRiftCountMult = Config.Bind<float>("Options", "DoomsdayRiftCountMult", 1f, "Multiply number of rifts required for doomsday by this amount.");
 
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), null);
 
-        }
-
-
-        [HarmonyPatch(typeof(RiftSpawnSystem), nameof(RiftSpawnSystem._riftsToTriggerDoomsDay))]
-        [HarmonyPatch(MethodType.Getter)]
-        static class RiftSpawnSystem__riftsToTriggerDoomsDay_Patch
-        {
-            static bool Prefix(ref int __result)
-            {
-                if (!modEnabled.Value)
-                    return true;
-                __result = Mathf.RoundToInt(__result * doomsdayRiftCountMult.Value);
-                return false;
-            }
         }
         [HarmonyPatch(typeof(RiftSpawnSystem), nameof(RiftSpawnSystem.IsRiftSpawningAllowed))]
         static class RiftSpawnSystem_IsRiftSpawningAllowed_Patch
